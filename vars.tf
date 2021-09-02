@@ -17,3 +17,7 @@ variable "aws_secret_key" {
 variable "aws_region" {
 	description = "The region name to deploy into"
 }
+
+variable "allowed_ip_network" {
+	description = "Networks allowed in security group for ingress rules"
+}

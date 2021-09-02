@@ -15,7 +15,8 @@ terraform {
   }
 }
 
-module "zf-vpc" {
-  source = "./modules/vpc"
-  vpc_id = var.aws_vpc_id
+module "vpc" {
+  source                    = "./modules/vpc"
+  vpc_id                    = var.aws_vpc_id
+  allowed_ip_network        = var.allowed_ip_network
 }
