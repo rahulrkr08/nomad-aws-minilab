@@ -9,14 +9,6 @@ resource "aws_instance" "nomad-node" {
     user_data = file("conf/install-nomad.sh")
     private_ip = "10.0.${count.index}.100"
 
-    instance_market_options {
-        market_type = "spot"
-        spot_options {
-            max_price  = var.nomad_node_spot_price
-            instance_interruption_behavior = "stop"
-        }
-    }
-
     tags = {
         Terraform = "true"
         ProvisionedBy = "Project Avaazz"
