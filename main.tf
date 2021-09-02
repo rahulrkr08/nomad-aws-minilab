@@ -1,8 +1,8 @@
 resource "aws_instance" "nomad-node" {
     count = var.nomad_node_count
     ami = var.nomad_node_ami_id
-    instance_type = var.nomad_node_instance_size
     spot_price    = var.nomad_node_spot_price
+    instance_type = var.nomad_node_instance_size
     key_name = var.aws_key_name
     subnet_id = aws_subnet.nomad-lab-pub[count.index].id
     vpc_security_group_ids = [aws_security_group.nomad-sg.id]
