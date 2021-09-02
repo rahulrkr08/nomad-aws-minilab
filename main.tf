@@ -18,6 +18,7 @@
 # }
 
 resource "aws_launch_template" "nomad-node" {
+  count                       = var.nomad_node_count
   name                        = "launch-template"
   image_id                    = var.nomad_node_ami_id
   instance_type               = var.nomad_node_instance_size
