@@ -40,10 +40,14 @@ resource "aws_iam_instance_profile" "nomad-node-profile" {
 }
 
 resource "aws_launch_configuration" "nomad-node-lc" {
-  name_prefix   = "nomad-launch-configuration-"
-  image_id      = var.nomad_node_ami_id
-  instance_type = var.nomad_node_instance_size
-
+  name_prefix                 = "nomad-launch-configuration-"
+  image_id                    = var.nomad_node_ami_id
+  instance_type               = var.nomad_node_instance_size
+  spot_price                  = var.nomad_node_spot_price
+  key_name                    = var.aws_key_name
+  security_groups             = var.security_groups
+  user_data                   = file("conf/install-nomad.sh")
+  
   lifecycle {
     create_before_destroy = true
   }
@@ -59,11 +63,6 @@ module "asg" {
   create_lc                   = false
   use_lc                      = true
   launch_configuration        = aws_launch_configuration.nomad-node-lc.name
-
-  spot_price                  = var.nomad_node_spot_price
-  security_groups             = var.security_groups
-  user_data                   = file("conf/install-nomad.sh")
-  key_name                    = var.aws_key_name
   iam_instance_profile_arn    = aws_iam_instance_profile.nomad-node-profile.id
 
   # Auto scaling group 
