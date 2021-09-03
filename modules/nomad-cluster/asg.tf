@@ -41,7 +41,7 @@ module "asg" {
 
   # Auto scaling group
   asg_name                    = "nomad-node-autoscaling-group-"
-  vpc_zone_identifier         = [for s in var.subnets : s.id]
+  vpc_zone_identifier         = [for s in var.subnets : s]
   health_check_type           = "EC2"
   min_size                    = 1
   max_size                    = var.nomad_node_count

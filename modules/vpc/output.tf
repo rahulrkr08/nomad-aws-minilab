@@ -3,7 +3,7 @@ output "vpc_id" {
 }
 
 output "subnets" { 
-  value = [aws_subnet.nomad-lab-pub.*.ids]
+  value = [for s in aws_subnet.nomad-lab-pub: s.id]
 }
 
 output "security_groups" { 
