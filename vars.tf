@@ -55,6 +55,7 @@ variable "additional_tags" {
   default     = {
     Terraform 		= "true"
     Avaazz 			= "true"
+	Nomad			= "true"
   }
 
   description 		= "Additional resource tags"
