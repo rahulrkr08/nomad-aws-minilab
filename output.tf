@@ -1,3 +1,3 @@
-output "zf-vpc" {
-  value = var.vpc_id
+output "zipslr-vpc" {
+  value = module.vpc.vpc_id
 }

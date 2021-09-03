@@ -1,26 +1,4 @@
-variable "env" {
-  default = "dev"
-}
-
-variable "aws_vpc_id" {
-  description = "Amazon VPC ID"
-}
-
-variable "aws_access_key" {
-	description = "Access key for AWS account"
-}
-
-variable "aws_secret_key" {
-	description = "Secret for AWS account"
-}
-
-variable "aws_region" {
-	description = "The region name to deploy into"
-}
-
-variable "allowed_ip_network" {
-	description = "Networks allowed in security group for ingress rules"
-}
+variable "env" {}
 
 variable "nomad_node_ami_id" {
 	description = "AMI ID to use for Nomad nodes"
@@ -42,3 +20,7 @@ variable "nomad_node_count" {
   description = "The number of server nodes (should be 3 or 5)"
   type        = number
 }
+
+variable "security_groups" { }
+
+variable "subnets" { }
