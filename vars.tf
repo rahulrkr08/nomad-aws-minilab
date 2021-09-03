@@ -2,9 +2,7 @@ variable "env" {
   default = "dev"
 }
 
-variable "aws_vpc_id" {
-  description = "Amazon VPC ID"
-}
+variable "project" { }
 
 variable "aws_access_key" {
 	description = "Access key for AWS account"
@@ -41,4 +39,24 @@ variable "aws_key_name" {
 variable "nomad_node_count" {
   description = "The number of server nodes (should be 3 or 5)"
   type        = number
+}
+
+variable "az_map" {
+	type = map
+
+	default = {
+		0 = "a"
+		1 = "b"
+		2 = "c"
+	}
+}
+
+variable "additional_tags" {
+  default     = {
+    Terraform 		= "true"
+    Avaazz 			= "true"
+  }
+
+  description 		= "Additional resource tags"
+  type        		= map(string)
 }

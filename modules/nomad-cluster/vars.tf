@@ -1,4 +1,6 @@
-variable "env" {}
+variable "env" { }
+
+variable "project" { }
 
 variable "nomad_node_ami_id" {
 	description = "AMI ID to use for Nomad nodes"
@@ -24,3 +26,5 @@ variable "nomad_node_count" {
 variable "security_groups" { }
 
 variable "subnets" { }
+
+variable "additional_tags" { }

@@ -24,12 +24,12 @@ resource "aws_iam_instance_profile" "nomad-node-profile" {
 
 module "asg" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version = "~> 3.0"
+  version                     = "~> 3.0"
   
-  name = "nomad-node-asg"
+  name                        = "nomad-node-asg"
 
   # Launch configuration
-  lc_name = "nomad-node-launch-configuration-"
+  lc_name                     = "nomad-node-launch-configuration-"
 
   image_id                    = var.nomad_node_ami_id
   instance_type               = var.nomad_node_instance_size
@@ -40,24 +40,16 @@ module "asg" {
   iam_instance_profile        = aws_iam_instance_profile.nomad-node-profile.id
 
   # Auto scaling group
-  asg_name                  = "nomad-node-autoscaling-group-"
-  vpc_zone_identifier       = [for s in var.subnets : s.id]
-  health_check_type         = "EC2"
-  min_size                  = 1
-  max_size                  = var.nomad_node_count
-  desired_capacity          = var.nomad_node_count
-  wait_for_capacity_timeout = 0
+  asg_name                    = "nomad-node-autoscaling-group-"
+  vpc_zone_identifier         = [for s in var.subnets : s.id]
+  health_check_type           = "EC2"
+  min_size                    = 1
+  max_size                    = var.nomad_node_count
+  desired_capacity            = var.nomad_node_count
+  wait_for_capacity_timeout   = 0
 
-  tags = [
-    {
-      key                 = "Environment"
-      value               = var.env
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Project"
-      value               = "zipslr"
-      propagate_at_launch = true
-    },
-  ]
+  tags_as_map = merge(
+    var.additional_tags,
+    {}
+  )
 }

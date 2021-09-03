@@ -1,6 +1,6 @@
 resource "aws_security_group" "nomad-sg" {
-  name = "nomad-sg"
-  vpc_id = "${var.vpc_id}"
+  name = "${var.project}-${var.env}-sg"
+  vpc_id = aws_vpc.nomad-lab-vpc.id
  
   ingress {
     from_port   = 80
@@ -135,8 +135,8 @@ resource "aws_security_group" "nomad-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-      Terraform = "true"
-      Avaazz = "true"
-  }
+  tags = merge(
+    var.additional_tags,
+    {}
+  )
 }

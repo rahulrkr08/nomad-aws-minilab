@@ -1,9 +1,9 @@
 output "vpc_id" {
-  value = "${data.aws_vpc.selected.id}"
+  value = aws_vpc.nomad-lab-vpc.id
 }
 
 output "subnets" { 
-  value = "${data.aws_subnet.main}"
+  value = [aws_subnet.nomad-lab-pub.*.ids]
 }
 
 output "security_groups" { 
