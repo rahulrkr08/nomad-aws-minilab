@@ -22,31 +22,58 @@ resource "aws_iam_instance_profile" "nomad-node-profile" {
   role = aws_iam_role.nomad-node-role.name
 }
 
+resource "aws_launch_configuration" "nomad-node-lc" {
+  name_prefix   = "nomad-launch-configuration-"
+  image_id      = var.nomad_node_ami_id
+  instance_type = var.nomad_node_instance_size
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 module "asg" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version                     = "~> 3.0"
+  version                     = "~> 4.4.0"
   
   name                        = "nomad-node-asg"
 
   # Launch configuration
-  lc_name                     = "nomad-node-launch-configuration-"
+  create_lc                   = false
+  use_lc                      = true
+  launch_configuration        = aws_launch_configuration.nomad-node-lc.name
 
-  image_id                    = var.nomad_node_ami_id
-  instance_type               = var.nomad_node_instance_size
   spot_price                  = var.nomad_node_spot_price
   security_groups             = var.security_groups
   user_data                   = file("conf/install-nomad.sh")
   key_name                    = var.aws_key_name
-  iam_instance_profile        = aws_iam_instance_profile.nomad-node-profile.id
+  iam_instance_profile_arn    = aws_iam_instance_profile.nomad-node-profile.id
 
-  # Auto scaling group
-  asg_name                    = "nomad-node-autoscaling-group-"
+  # Auto scaling group 
   vpc_zone_identifier         = [for s in var.subnets : s]
   health_check_type           = "EC2"
   min_size                    = 1
   max_size                    = var.nomad_node_count
   desired_capacity            = var.nomad_node_count
   wait_for_capacity_timeout   = 0
+
+  network_interfaces = [
+    {
+      delete_on_termination = true
+      device_index          = 0
+      private_ip_address    = "10.0.0.100"
+    },
+    {
+      delete_on_termination = true
+      device_index          = 1
+      private_ip_address    = "10.0.1.100"
+    },
+    {
+      delete_on_termination = true
+      device_index          = 2
+      private_ip_address    = "10.0.2.100"
+    }
+  ]
 
   tags_as_map = merge(
     var.additional_tags,
