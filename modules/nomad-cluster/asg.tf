@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "ecs-instance-policy" {
 }
 
 data "template_file" "nomad_install_snippet" {
-  template = file("config/tpl/install_nomad.sh.tpl")
+  template = file("conf/tpl/install_nomad.sh.tpl")
   vars = {
     NOMAD_COUNT                   = var.nomad_node_count
   }
@@ -22,14 +22,14 @@ data "template_file" "nomad_install_snippet" {
 # nomad-servers are configured via a template #
 ################################################
 data "template_file" "nomad_server_userdata" {
-  template = file("config/tpl/nomad-userdata.sh.tpl")
+  template = file("conf/tpl/nomad-userdata.sh.tpl")
   vars = {
-    BASE_PACKAGES_SNIPPET         = file("config/tpl/install_base_packages.sh")
-    DNSMASQ_CONFIG_SNIPPET        = file("config/tpl/install_dnsmasq.sh")
-    CONSUL_INSTALL_SNIPPET        = file("config/tpl/install_consul.sh")
-    CONSUL_CLIENT_CONFIG_SNIPPET  = file("config/tpl/consul_client_config.sh")
+    BASE_PACKAGES_SNIPPET         = file("conf/tpl/install_base_packages.sh")
+    DNSMASQ_CONFIG_SNIPPET        = file("conf/tpl/install_dnsmasq.sh")
+    CONSUL_INSTALL_SNIPPET        = file("conf/tpl/install_consul.sh")
+    CONSUL_CLIENT_CONFIG_SNIPPET  = file("conf/tpl/consul_client_config.sh")
     NOMAD_INSTALL_SNIPPET         = data.template_file.nomad_install_snippet.rendered
-    CONSUL_TPL_INSTALL_SNIPPET    = file("config/tpl/install_consul_template.sh")
+    CONSUL_TPL_INSTALL_SNIPPET    = file("conf/tpl/install_consul_template.sh")
     # ETHERPAD_NOMAD_JOB_SNIPPET    = file("config/tpl/etherpad-nomad-svc.hcl")
     # ETHERPAD_CONFIG_SNIPPET       = file("config/tpl/etherpad-settings.json.tpl")
   }
