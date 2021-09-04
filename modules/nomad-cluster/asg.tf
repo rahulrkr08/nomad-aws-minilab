@@ -1,20 +1,3 @@
-# resource "aws_instance" "nomad-node" {
-#   count = var.nomad_node_count
-#   ami = var.nomad_node_ami_id
-#   instance_type = var.nomad_node_instance_size
-#   key_name = var.aws_key_name
-#   subnet_id = var.subnets[count.index]
-#   vpc_security_group_ids = var.security_groups
-#   associate_public_ip_address = true
-#   user_data = file("conf/install-nomad.sh")
-#   private_ip = "10.0.${count.index}.100"
-
-#   tags = merge(
-#     var.additional_tags,
-#     {}
-#   )
-# }
-
 data "aws_iam_policy_document" "ecs-instance-policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -25,6 +8,30 @@ data "aws_iam_policy_document" "ecs-instance-policy" {
     }
 
     effect = "Allow"
+  }
+}
+
+data "template_file" "nomad_install_snippet" {
+  template = file("config/tpl/install_nomad.sh.tpl")
+  vars = {
+    NOMAD_COUNT                   = var.nomad_node_count
+  }
+}
+
+################################################
+# nomad-servers are configured via a template #
+################################################
+data "template_file" "nomad_server_userdata" {
+  template = file("config/tpl/nomad-userdata.sh.tpl")
+  vars = {
+    BASE_PACKAGES_SNIPPET         = file("config/tpl/install_base_packages.sh")
+    DNSMASQ_CONFIG_SNIPPET        = file("config/tpl/install_dnsmasq.sh")
+    CONSUL_INSTALL_SNIPPET        = file("config/tpl/install_consul.sh")
+    CONSUL_CLIENT_CONFIG_SNIPPET  = file("config/tpl/consul_client_config.sh")
+    NOMAD_INSTALL_SNIPPET         = data.template_file.nomad_install_snippet.rendered
+    CONSUL_TPL_INSTALL_SNIPPET    = file("config/tpl/install_consul_template.sh")
+    # ETHERPAD_NOMAD_JOB_SNIPPET    = file("config/tpl/etherpad-nomad-svc.hcl")
+    # ETHERPAD_CONFIG_SNIPPET       = file("config/tpl/etherpad-settings.json.tpl")
   }
 }
 
@@ -46,8 +53,8 @@ resource "aws_launch_configuration" "nomad-node-lc" {
   spot_price                  = var.nomad_node_spot_price
   key_name                    = var.aws_key_name
   security_groups             = var.security_groups
-  user_data                   = file("conf/install-nomad.sh")
-  
+  user_data                   = data.template_file.nomad_server_userdata.rendered
+
   lifecycle {
     create_before_destroy = true
   }
