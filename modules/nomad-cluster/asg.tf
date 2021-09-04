@@ -11,29 +11,29 @@ data "aws_iam_policy_document" "ecs-instance-policy" {
   }
 }
 
-data "template_file" "nomad_install_snippet" {
-  template = file("conf/tpl/install_nomad.sh.tpl")
-  vars = {
-    NOMAD_COUNT                   = var.nomad_node_count
-  }
-}
+# data "template_file" "nomad_install_snippet" {
+#   template = file("conf/tpl/install_nomad.sh.tpl")
+#   vars = {
+#     NOMAD_COUNT                   = var.nomad_node_count
+#   }
+# }
 
-################################################
-# nomad-servers are configured via a template #
-################################################
-data "template_file" "nomad_server_userdata" {
-  template = file("conf/tpl/nomad-userdata.sh.tpl")
-  vars = {
-    BASE_PACKAGES_SNIPPET         = file("conf/tpl/install_base_packages.sh")
-    DNSMASQ_CONFIG_SNIPPET        = file("conf/tpl/install_dnsmasq.sh")
-    CONSUL_INSTALL_SNIPPET        = file("conf/tpl/install_consul.sh")
-    CONSUL_CLIENT_CONFIG_SNIPPET  = file("conf/tpl/consul_client_config.sh")
-    NOMAD_INSTALL_SNIPPET         = data.template_file.nomad_install_snippet.rendered
-    CONSUL_TPL_INSTALL_SNIPPET    = file("conf/tpl/install_consul_template.sh")
-    # ETHERPAD_NOMAD_JOB_SNIPPET    = file("config/tpl/etherpad-nomad-svc.hcl")
-    # ETHERPAD_CONFIG_SNIPPET       = file("config/tpl/etherpad-settings.json.tpl")
-  }
-}
+# ################################################
+# # nomad-servers are configured via a template #
+# ################################################
+# data "template_file" "nomad_server_userdata" {
+#   template = file("conf/tpl/nomad-userdata.sh.tpl")
+#   vars = {
+#     NOMAD_INSTALL_SNIPPET         = data.template_file.nomad_install_snippet.rendered
+#     # BASE_PACKAGES_SNIPPET         = file("conf/tpl/install_base_packages.sh")
+#     # DNSMASQ_CONFIG_SNIPPET        = file("conf/tpl/install_dnsmasq.sh")
+#     # CONSUL_INSTALL_SNIPPET        = file("conf/tpl/install_consul.sh")
+#     # CONSUL_CLIENT_CONFIG_SNIPPET  = file("conf/tpl/consul_client_config.sh")
+#     # CONSUL_TPL_INSTALL_SNIPPET    = file("conf/tpl/install_consul_template.sh")
+#     # ETHERPAD_NOMAD_JOB_SNIPPET    = file("config/tpl/etherpad-nomad-svc.hcl")
+#     # ETHERPAD_CONFIG_SNIPPET       = file("config/tpl/etherpad-settings.json.tpl")
+#   }
+# }
 
 resource "aws_iam_role" "nomad-node-role" {
   name_prefix         = "nomad-node-role-"
@@ -53,7 +53,8 @@ resource "aws_launch_configuration" "nomad-node-lc" {
   spot_price                  = var.nomad_node_spot_price
   key_name                    = var.aws_key_name
   security_groups             = var.security_groups
-  user_data                   = data.template_file.nomad_server_userdata.rendered
+  # user_data                   = data.template_file.nomad_server_userdata.rendered
+  user_data                   = file("conf/install-nomad.sh")
 
   lifecycle {
     create_before_destroy = true
