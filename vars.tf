@@ -10,6 +10,10 @@ variable "aws_region" {
 	description = "The region name to deploy into"
 }
 
+variable "nomad_node_ami_id" {
+  description = "nomad_node_ami_id"
+}
+
 variable "private_subnet_cidr" {
   type            = string
   description     = "The CIDR for our private subnet"

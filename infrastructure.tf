@@ -20,6 +20,7 @@ module "consul" {
   subnet_id                 = aws_subnet.private.id
   vpc_id                    = aws_vpc.tutorialinux.id
   vpc_cidr                  = aws_vpc.tutorialinux.cidr_block
+  nomad_node_ami_id         = var.nomad_node_ami_id
   # bastion_connect           = module.bastion.bastion_public_ip
 }
 
@@ -35,6 +36,7 @@ module "nomad" {
   subnet_id                 = aws_subnet.private.id
   vpc_id                    = aws_vpc.tutorialinux.id
   vpc_cidr                  = aws_vpc.tutorialinux.cidr_block
+  nomad_node_ami_id         = var.nomad_node_ami_id
 }
 
 # This creates a traefik host

@@ -4,7 +4,7 @@
 # Our nomad-Server Instances #
 ###############################
 resource "aws_instance" "nomad" {
-  ami                     = var.ami
+  ami                     = var.nomad_node_ami_id
   count                   = var.nomad_cluster_size
   instance_type           = var.instance_type
   key_name                = var.key_name

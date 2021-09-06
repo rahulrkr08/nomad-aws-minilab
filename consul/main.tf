@@ -4,7 +4,7 @@
 # Our Consul-Server Instances #
 ###############################
 resource "aws_instance" "consul" {
-  ami                     = var.ami
+  ami                     = var.nomad_node_ami_id
   # we always want 3 consul hosts, I've changed this to no longer be configurable
   count                   = 3
   instance_type           = var.instance_type
