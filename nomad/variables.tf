@@ -9,3 +9,5 @@ variable "vpc_id" {}
 variable "nomad_cluster_size" {
     default = 3
 }
+
+variable "nomad_node_ami_id" {}
