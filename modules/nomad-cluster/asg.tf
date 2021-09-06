@@ -29,6 +29,26 @@ data "aws_iam_policy_document" "ecs-instance-policy" {
   }
 }
 
+resource "aws_iam_role_policy" "auto_discover_cluster" {
+  name   = "auto-discover-cluster"
+  role   = aws_iam_role.instance_role.id
+  policy = data.aws_iam_policy_document.auto_discover_cluster.json
+}
+
+data "aws_iam_policy_document" "auto_discover_cluster" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ec2:DescribeInstances",
+      "ec2:DescribeTags",
+      "autoscaling:DescribeAutoScalingGroups",
+    ]
+
+    resources = ["*"]
+  }
+}
+
 # data "template_file" "nomad_install_snippet" {
 #   template = file("conf/tpl/install_nomad.sh.tpl")
 #   vars = {
