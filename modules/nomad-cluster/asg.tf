@@ -10,12 +10,10 @@ resource "aws_spot_instance_request" "nomad-node" {
     user_data = file("conf/install-nomad.sh")
     private_ip = "10.0.${count.index}.100"
 
-    tags = {
-        Terraform = "true"
-        ProvisionedBy = "Project Terra"
-        Turbonomic = "true"
-        Name = "nomad-node-${count.index}"
-    }
+    tags = merge(
+        var.additional_tags,
+        {}
+    )
 }
 
 # data "aws_iam_policy_document" "ecs-instance-policy" {

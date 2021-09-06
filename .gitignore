@@ -2,6 +2,7 @@
 **/.terraform/*
 scratch.txt
 temp*
+_*
 
 # .tfstate files
 *.tfstate
