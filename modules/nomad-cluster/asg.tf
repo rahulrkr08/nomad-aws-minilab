@@ -1,6 +1,7 @@
 resource "aws_spot_instance_request" "nomad-node" {
     count = var.nomad_node_count
     ami = var.nomad_node_ami_id
+    spot_price = var.nomad_node_spot_price
     instance_type = var.nomad_node_instance_size
     key_name = var.aws_key_name
     subnet_id = var.subnets[count.index] # aws_subnet.nomad-lab-pub[count.index].id
