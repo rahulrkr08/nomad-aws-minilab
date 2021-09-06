@@ -1,18 +1,50 @@
 data_dir = "/tmp/nomad/server"
 
+bind_addr = "0.0.0.0"
+leave_on_terminate = true
+enable_syslog = true
+
 server {
-  enabled          = true
-  bootstrap_expect = 3
+    enabled = true
+    bootstrap_expect = 3
+}
+client {
+    enabled = true
+    template {
+        disable_file_sandbox = true
+    }
+}
+consul {
+    address = "127.0.0.1:8500"
+    ssl = false
 }
 
 datacenter = "dc-aws-1"
 region = "region-aws-1"
 
-advertise {
-  http = "{{ GetInterfaceIP `eth0` }}"
-  rpc  = "{{ GetInterfaceIP `eth0` }}"
-  serf = "{{ GetInterfaceIP `eth0` }}"
-}
+// server {
+//   enabled          = true
+//   bootstrap_expect = 3
+//   job_gc_threshold = "2m"
+//   server_join {
+//     retry_join = ["10.0.0.100", "10.0.1.100", "10.0.2.100"]
+//     retry_max = 10
+//     retry_interval = "15s"
+//   }
+// }
+
+
+
+
+
+# Running as both client and server is not what you want for production!
+
+
+// advertise {
+//   http = "{{ GetInterfaceIP `eth0` }}"
+//   rpc  = "{{ GetInterfaceIP `eth0` }}"
+//   serf = "{{ GetInterfaceIP `eth0` }}"
+// }
 
 plugin "raw_exec" {
   config {
@@ -20,30 +52,31 @@ plugin "raw_exec" {
   }
 }
 
-client {
-  enabled           = true
-  network_interface = "eth0"
+// client {
+//   enabled           = true
+//   network_interface = "eth0"
+//   servers           = ["10.0.0.100", "10.0.1.100", "10.0.2.100"]
 
-  host_volume "certs" {
-    path      = "/data/certs"
-    read_only = "true"
-  }
+//   host_volume "certs" {
+//     path      = "/data/certs"
+//     read_only = "true"
+//   }
 
-  host_volume "mysql" {
-    path      = "/data/mysql"
-    read_only = "false"
-  }
+//   host_volume "mysql" {
+//     path      = "/data/mysql"
+//     read_only = "false"
+//   }
 
-  host_volume "prometheus" {
-    path      = "/data/prometheus"
-    read_only = "false"
-  }
+//   host_volume "prometheus" {
+//     path      = "/data/prometheus"
+//     read_only = "false"
+//   }
 
-  host_volume "templates" {
-    path      = "/data/templates"
-    read_only = "true"
-  }
-}
+//   host_volume "templates" {
+//     path      = "/data/templates"
+//     read_only = "true"
+//   }
+// }
 
 acl {
   enabled = false

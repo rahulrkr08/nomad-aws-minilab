@@ -16,18 +16,18 @@
 #     )
 # }
 
-# data "aws_iam_policy_document" "ecs-instance-policy" {
-#   statement {
-#     actions = ["sts:AssumeRole"]
+data "aws_iam_policy_document" "ecs-instance-policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
 
-#     principals {
-#         type        = "Service"
-#         identifiers = ["ec2.amazonaws.com"]
-#     }
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
 
-#     effect = "Allow"
-#   }
-# }
+    effect = "Allow"
+  }
+}
 
 # data "template_file" "nomad_install_snippet" {
 #   template = file("conf/tpl/install_nomad.sh.tpl")
