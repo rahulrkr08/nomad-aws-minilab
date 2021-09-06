@@ -6,7 +6,7 @@ advertise_addr   = "{{ GetInterfaceIP `eth0` }}"
 client_addr      = "0.0.0.0"
 ui               = true
 datacenter       = "dc-aws-1"
-retry_join       = ["provider=aws tag_key=Nomad tag_value=true addr_type=private_v4"]
+retry_join       = ["10.0.0.100", "10.0.1.100", "10.0.2.100"]
 retry_max        = 10
 retry_interval   = "15s"
 

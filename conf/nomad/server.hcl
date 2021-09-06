@@ -5,7 +5,7 @@ server {
   bootstrap_expect = 3
   job_gc_threshold = "2m"
   server_join {
-    retry_join = ["provider=aws tag_key=Nomad tag_value=true addr_type=private_v4"]
+    retry_join = ["10.0.0.100", "10.0.1.100", "10.0.2.100"]
     retry_max = 10
     retry_interval = "15s"
   }
@@ -29,11 +29,7 @@ plugin "raw_exec" {
 client {
   enabled           = true
   network_interface = "eth0"
-  server_join {
-    retry_join = ["provider=aws tag_key=Nomad tag_value=true addr_type=private_v4"]
-    retry_max = 10
-    retry_interval = "15s"
-  }
+  servers           = ["10.0.0.100", "10.0.1.100", "10.0.2.100"]
 
   host_volume "certs" {
     path      = "/data/certs"
@@ -77,6 +73,3 @@ autopilot {
   disable_upgrade_migration = false
   enable_custom_upgrades    = false
 }
-
-
-
