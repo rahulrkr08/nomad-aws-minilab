@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "ecs-instance-policy" {
 
 resource "aws_iam_role_policy" "auto_discover_cluster" {
   name   = "auto-discover-cluster"
-  role   = aws_iam_role.instance_role.id
+  role   = aws_iam_role.nomad-node-role.id
   policy = data.aws_iam_policy_document.auto_discover_cluster.json
 }
 
