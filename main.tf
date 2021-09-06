@@ -4,7 +4,7 @@ provider "aws" {
   secret_key      = var.aws_secret_key
   region          = var.aws_region
 
-  default_tags = {
+  default_tags {
     tags = merge(
       var.additional_tags,
       {}
