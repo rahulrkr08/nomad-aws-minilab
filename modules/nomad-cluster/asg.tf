@@ -1,4 +1,4 @@
-resource "aws_instance" "nomad-node" {
+resource "aws_spot_instance_request" "nomad-node" {
     count = var.nomad_node_count
     ami = var.nomad_node_ami_id
     instance_type = var.nomad_node_instance_size
