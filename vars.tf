@@ -1,3 +1,9 @@
+variable "env" {
+  default = "dev"
+}
+
+variable "project" { }
+
 variable "aws_access_key" {
 	description = "Access key for AWS account"
 }
@@ -10,34 +16,48 @@ variable "aws_region" {
 	description = "The region name to deploy into"
 }
 
+variable "allowed_ip_network" {
+	description = "Networks allowed in security group for ingress rules"
+}
+
 variable "nomad_node_ami_id" {
-  description = "nomad_node_ami_id"
+	description = "AMI ID to use for Nomad nodes"
 }
 
-variable "private_subnet_cidr" {
-  type            = string
-  description     = "The CIDR for our private subnet"
-  default         = "10.0.1.0/24"
+variable "nomad_node_instance_size" {
+	description = "EC2 instance type/size for Nomad nodes"
 }
 
-variable "public_subnet_cidr" {
-  type            = string
-  description     = "The CIDR for our public subnet"
-  default         = "10.0.10.0/24"
+variable "nomad_node_spot_price" {
+	description = "Price for spot instance"
 }
 
-variable "public_subnet_az" {
-  type            = string
-  default         = "ap-south-1a"
+variable "aws_key_name" {
+	description = "SSH key name"
 }
 
-variable "private_subnet_az" {
-  type            = string
-  default         = "ap-south-1b"
+variable "nomad_node_count" {
+  description = "The number of server nodes (should be 3 or 5)"
+  type        = number
 }
 
-# The AWS Marketplace is awash in scams, use https://cloud-images.ubuntu.com/locator/ec2/
-variable "base_ec2_ami" {
-  # us-west-2 amd64 ubuntu 20.04 HVM SSD, updated 05-10-2021
-  default = "ami-09c3a3d3af3a0bd2e"
+variable "az_map" {
+	type = map
+
+	default = {
+		0 = "a"
+		1 = "b"
+		2 = "c"
+	}
+}
+
+variable "additional_tags" {
+  default     = {
+    Terraform 		= "true"
+    Avaazz 			= "true"
+	Nomad			= "true"
+  }
+
+  description 		= "Additional resource tags"
+  type        		= map(string)
 }
